@@ -308,11 +308,18 @@
   <div class="notes-list">
     {#if filteredNotes.length > 0}
       {#each filteredNotes as note (note.id)}
-        <div class="note-card" on:click={() => selectNote(note)}>
+        <div
+          class="note-card"
+          role="button"
+          tabIndex="0"
+          on:click={() => selectNote(note)}
+          on:keydown={(e) => { if (e.key === 'Enter' || e.key === ' ') selectNote(note); }}
+          aria-label={"Open note " + note.title}
+        >
           <div class="note-card-title">{note.title}</div>
           <div class="note-card-snippet">{note.content.slice(0, 72)}{note.content.length > 72 ? '…' : ''}</div>
           <div class="note-card-categories">
-            {#each note.categories ?? [] as cat}
+            {#each note.categories ?? [] as cat (cat)}
               <span
                 class="category-label"
                 style="--tag-color: {availableCategories.find(c=>c.name===cat)?.color || '#aaa'}"
