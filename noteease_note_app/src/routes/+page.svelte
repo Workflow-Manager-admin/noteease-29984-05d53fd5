@@ -339,8 +339,21 @@
 </button>
 
 {#if selectedNote}
-  <div class="modal-bg" on:click|self={closeNote}>
-    <div class="modal-contents" on:click|stopPropagation>
+  <div
+    class="modal-bg"
+    role="dialog"
+    aria-modal="true"
+    tabIndex="0"
+    on:click|self={closeNote}
+    on:keydown={(e) => { if (e.key === 'Escape') closeNote(); }}
+  >
+    <div
+      class="modal-contents"
+      role="document"
+      tabIndex="0"
+      on:click|stopPropagation
+      on:keydown={(e) => { if (e.key === 'Escape') closeNote(); }}
+    >
       {#if isEditing}
         <input
           class="input-title"
@@ -352,9 +365,9 @@
           class="input-content"
           placeholder="Write your note…"
           bind:value={selectedNote.content}
-        />
+        ></textarea>
         <div class="category-selectors">
-          {#each availableCategories as cat}
+          {#each availableCategories as cat (cat.name)}
             <button
               class="category-select"
               type="button"
@@ -381,7 +394,7 @@
           {selectedNote.content}
         </div>
         <div class="note-card-categories" style="margin-bottom:20px;">
-          {#each selectedNote.categories ?? [] as cat}
+          {#each selectedNote.categories ?? [] as cat (cat)}
             <span
               class="category-label"
               style="--tag-color: {availableCategories.find(c=>c.name===cat)?.color || '#aaa'}"
